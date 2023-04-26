@@ -182,7 +182,7 @@ vector<double> GWO(double (*objf)(double[],int), int dim, int SearchAgents_no, i
 
 int main() {
     vector<vector<double>> data;
-    read_data("test.csv", data);
+    read_data("../test.csv", data);
     // print_data(data);
     standardize(data);
     // print_data(data);
