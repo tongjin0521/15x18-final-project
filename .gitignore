@@ -1,4 +1,7 @@
 *.out
 *.exe
+*.o
+gwo-sequential
 
 __pycache__
+.vscode

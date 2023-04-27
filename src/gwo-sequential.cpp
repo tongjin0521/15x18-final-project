@@ -1,76 +1,16 @@
-#include <iostream>
 #include <vector>
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
 #include <algorithm>
 #include <numeric>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
+#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <random>
-
+#include "common.h"
 
 using namespace std;
-
-void read_data(string filename, vector<vector<double>> &data) {
-    ifstream file(filename);
-    string line;
-    getline(file, line); // Skip the first line (header)
-    while (getline(file, line)) {
-        vector<double> row;
-        string cell;
-        stringstream lineStream(line);
-
-        while (getline(lineStream, cell, ',')) {
-            row.push_back(stof(cell));
-        }
-
-        data.push_back(row);
-    }
-}
-
-void standardize(std::vector<std::vector<double>>& input) {
-    for (int i = 0; i < input[0].size(); i++) {
-        // Calculate the mean of the column
-        double sum = std::accumulate(input.begin(), input.end(), 0.0f, [i](double a, const std::vector<double>& b) { return a + b[i]; });
-        double mean = sum / input.size();
-
-        // Calculate the standard deviation of the column
-        double sq_sum = std::inner_product(input.begin(), input.end(), input.begin(), 0.0f, std::plus<>(), [i, mean](const std::vector<double>& a, const std::vector<double>& b) { return (b[i] - mean) * (b[i] - mean); });
-        double stdev = std::sqrt(sq_sum / input.size());
-
-        // Subtract the mean and divide by the standard deviation for each element in the column
-        for (int j = 0; j < input.size(); j++) {
-            input[j][i] = (input[j][i] - mean) / stdev;
-        }
-    }
-}
-
-void print_data(vector<vector<double>> &data){
-    std::cout <<"--------" <<std::endl;
-    for (int i = 0; i < data.size(); i++) {
-        for (int j = 0; j < data[i].size(); j++) {
-            std::cout << data[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-}
-
-double fitness_func(double input[], int dim) {
-    // TODO: you should be using the input as labels to know which data you want
-    // then use data to calculate objf
-
-    double o = 0;
-    for (int i = 0; i <dim; i++) {
-        o = max(o, abs(input[i]));
-    }
-    return o;
-}
-
-
 
 
 vector<double> GWO(double (*objf)(double[],int), int dim, int SearchAgents_no, int Max_iter) {
@@ -168,9 +108,9 @@ vector<double> GWO(double (*objf)(double[],int), int dim, int SearchAgents_no, i
         cout<<"--------"<<endl;
         cout <<l <<" "<<Alpha_score << endl;
         for (int j = 0; j <dim; j++) {
-            std::cout << Alpha_pos[j] << " ";
+            cout << Alpha_pos[j] << " ";
         }
-        std::cout << std::endl;
+        cout << endl;
     }
     vector<double> res;
     for (int i = 0; i < dim; i++){
@@ -182,7 +122,7 @@ vector<double> GWO(double (*objf)(double[],int), int dim, int SearchAgents_no, i
 
 int main() {
     vector<vector<double>> data;
-    read_data("../test.csv", data);
+    read_data("test.csv", data);
     // print_data(data);
     standardize(data);
     // print_data(data);
