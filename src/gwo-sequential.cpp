@@ -77,15 +77,14 @@ vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, 
         {
             for (int j = 0; j < dim; j++)
             {
+                double D_alpha = abs(getC(dis, gen) * Alpha_pos[j] - Positions[i][j]); // Equation (3.5)-part 1
+                double X1 = Alpha_pos[j] - getA(a, dis, gen) * D_alpha;                // Equation (3.6)-part 1
 
-                double D_alpha = abs(getC(a, dis, gen) * Alpha_pos[j] - Positions[i][j]); // Equation (3.5)-part 1
-                double X1 = Alpha_pos[j] - getA(a, dis, gen) * D_alpha;                   // Equation (3.6)-part 1
+                double D_beta = abs(getC(dis, gen) * Beta_pos[j] - Positions[i][j]); // Equation (3.5)-part 2
+                double X2 = Beta_pos[j] - getA(a, dis, gen) * D_beta;                // Equation (3.6)-part 2
 
-                double D_beta = abs(getC(a, dis, gen) * Beta_pos[j] - Positions[i][j]); // Equation (3.5)-part 2
-                double X2 = Beta_pos[j] - getA(a, dis, gen) * D_beta;                   // Equation (3.6)-part 2
-
-                double D_delta = abs(getC(a, dis, gen) * Delta_pos[j] - Positions[i][j]); // Equation (3.5)-part 3
-                double X3 = Delta_pos[j] - getA(a, dis, gen) * D_delta;                   // Equation (3.5)-part 3
+                double D_delta = abs(getC(dis, gen) * Delta_pos[j] - Positions[i][j]); // Equation (3.5)-part 3
+                double X3 = Delta_pos[j] - getA(a, dis, gen) * D_delta;                // Equation (3.5)-part 3
 
                 Positions[i][j] = (X1 + X2 + X3) / 3; // Equation (3.7)
             }

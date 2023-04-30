@@ -74,7 +74,7 @@ inline double getA(double &a, uniform_real_distribution<> &dis, mt19937 &gen)
     return 2 * a * dis(gen) - a; // Equation (3.3)
 }
 
-inline double getC(double &a, uniform_real_distribution<> &dis, mt19937 &gen)
+inline double getC(uniform_real_distribution<> &dis, mt19937 &gen)
 {
     return 2 * dis(gen); // Equation (3.4)
 }
