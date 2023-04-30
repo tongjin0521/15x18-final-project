@@ -9,4 +9,7 @@ Run the MPI version with
 mpirun -n 5 gwo-MPI 
 ```
 
-TODO: Make the Number of agents configurable for all versions
+TODO: 
+- [] Make the Number of agents and number of iters configurable for all versions
+- [] SVM / Timewait
+- [] Openmp
