@@ -31,7 +31,7 @@ vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, 
         }
     }
 
-    double Convergence_curve[Max_iter];
+    // double Convergence_curve[Max_iter];
 
     // Main loop
     for (int l = 0; l < Max_iter; l++)
@@ -110,7 +110,7 @@ int main()
     vector<vector<double>> data;
     read_data("test.csv", data);
     // print_data(data);
-    standardize(data);
+    // standardize(data);
     // print_data(data);
     vector<double> res = GWO(fitness_func, data[0].size(), 5, 10);
     return 0;

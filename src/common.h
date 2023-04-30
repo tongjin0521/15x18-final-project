@@ -17,7 +17,12 @@ void read_data(string filename, vector<vector<double>> &data);
 void standardize(std::vector<std::vector<double>> &input);
 double fitness_func(double input[], int dim);
 void print_data(vector<vector<double>> &data);
-inline double getA(double &a, uniform_real_distribution<> &dis, mt19937 &gen);
-inline double getC(uniform_real_distribution<> &dis, mt19937 &gen);
-
+inline double getA(double &a, uniform_real_distribution<> &dis, mt19937 &gen)
+{
+    return 2 * a * dis(gen) - a; // Equation (3.3)
+}
+inline double getC(uniform_real_distribution<> &dis, mt19937 &gen)
+{
+    return 2 * dis(gen); // Equation (3.4)
+}
 #endif

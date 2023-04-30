@@ -2,13 +2,15 @@
 #include <iostream>
 #include <random>
 #include "common.h"
-// #include "mpi.h"
+#include "mpi.h"
 
 using namespace std;
 
 const int SearchAgents_no = 5; // Number of search agents
 
 const int Max_iter = 10; // Maximum number of iterations
+
+const int dim = 14; // Width of data matrix
 
 int main(int argc, char *argv[])
 {
