@@ -68,32 +68,14 @@ vector<double> GWO(double (*objf)(double[],int), int dim, int SearchAgents_no, i
         for (int i = 0; i < SearchAgents_no; i++) {
             for (int j = 0; j < dim; j++) {
                            
-                double r1 = dis(gen); // r1 is a random number in [0,1]
-                double r2 = dis(gen); // r2 is a random number in [0,1]
+                double D_alpha = abs(getC(a,dis,gen) * Alpha_pos[j] - Positions[i][j]); // Equation (3.5)-part 1
+                double X1 = Alpha_pos[j] - getA(a,dis,gen) * D_alpha; // Equation (3.6)-part 1
+
+                double D_beta = abs(getC(a,dis,gen)*Beta_pos[j]-Positions[i][j]); // Equation (3.5)-part 2
+                double X2 = Beta_pos[j]-getA(a,dis,gen)*D_beta; // Equation (3.6)-part 2       
                 
-                double A1 = 2 * a * r1 - a; // Equation (3.3)
-                double C1 = 2 * r2; // Equation (3.4)
-                
-                double D_alpha = abs(C1 * Alpha_pos[j] - Positions[i][j]); // Equation (3.5)-part 1
-                double X1 = Alpha_pos[j] - A1 * D_alpha; // Equation (3.6)-part 1
-                           
-                r1 = dis(gen);
-                r2 = dis(gen);
-
-                double A2 = 2*a*r1-a; // Equation (3.3)
-                double C2 = 2*r2; // Equation (3.4)
-
-                double D_beta = abs(C2*Beta_pos[j]-Positions[i][j]); // Equation (3.5)-part 2
-                double X2 = Beta_pos[j]-A2*D_beta; // Equation (3.6)-part 2       
-                
-                r1 = dis(gen);
-                r2 = dis(gen);
-
-                double A3 = 2*a*r1-a; // Equation (3.3)
-                double C3 = 2*r2; // Equation (3.4)
-
-                double D_delta = abs(C3*Delta_pos[j]-Positions[i][j]); // Equation (3.5)-part 3
-                double X3 = Delta_pos[j]-A3*D_delta; // Equation (3.5)-part 3             
+                double D_delta = abs(getC(a,dis,gen)*Delta_pos[j]-Positions[i][j]); // Equation (3.5)-part 3
+                double X3 = Delta_pos[j]-getA(a,dis,gen)*D_delta; // Equation (3.5)-part 3             
 
                 Positions[i][j] = (X1+X2+X3)/3; // Equation (3.7)        
             }
