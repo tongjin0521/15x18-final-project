@@ -2,5 +2,6 @@
 *.exe
 *.o
 gwo-sequential
+gwo-MPI
 
 __pycache__
