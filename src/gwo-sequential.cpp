@@ -40,7 +40,6 @@ vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, 
         // TODO: can we have more wolves? so best 4 solutions instead
         for (int i = 0; i < SearchAgents_no; i++)
         {
-
             // Return back the search agents that go beyond the boundaries of the search space
             for (int j = 0; j < dim; j++)
             {

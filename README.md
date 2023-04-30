@@ -1,3 +1,12 @@
 # 15x18-final-project
 
-Compile with `make` and run with `./gwo-sequential`.
+Compile with `make`.
+
+Run the sequential version with `./gwo-sequential`.
+
+Run the MPI version with 
+``` bash
+mpirun -n 5 gwo-MPI 
+```
+
+TODO: Make the Number of agents configurable for all versions
