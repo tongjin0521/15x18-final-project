@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
         pos[i] = dis(gen);
     }
 
-    double Convergence_curve[Max_iter];
+    // double Convergence_curve[Max_iter];
 
     // Main loop
     for (int l = 0; l < Max_iter; l++)
