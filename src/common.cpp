@@ -15,6 +15,20 @@ GWOArgs::GWOArgs(int agents, int iterations, string dataSource)
     dataSource = dataSource;
 }
 
+string GWOArgs::toString() const
+{
+    ostringstream oss;
+    oss << "GWOArgs(agentNum=" << agentNum
+        << ", iterNum=" << iterNum
+        << ", dataSource=\"" << dataSource << "\")";
+    return oss.str();
+}
+
+void writeResult(string method, double alphaScore, double time, GWOArgs &args)
+{
+    printf("%s,%d,%d,%s,%f,%.6f\n", method.c_str(), args.agentNum, args.iterNum, args.dataSource.c_str(), alphaScore, time);
+}
+
 GWOArgs parse_arguments(int argc, char *argv[])
 {
     GWOArgs args;

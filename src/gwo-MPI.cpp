@@ -168,9 +168,11 @@ int main(int argc, char *argv[])
 
     if (pid == 0)
     {
+        // cout << "MPI alpha score: " << Alpha_score << endl;
         double totalSimulationTime = totalSimulationTimer.elapsed();
         // printf("\n%.6f\n", now / options.numIterations);
-        printf("total simulation time: %.6fs\n", totalSimulationTime);
+        // printf("MPI total simulation time: %.6fs\n", totalSimulationTime);
+        writeResult("MPI", Alpha_score, totalSimulationTime, args);
         vector<double> res;
         for (int i = 0; i < dim; i++)
         {

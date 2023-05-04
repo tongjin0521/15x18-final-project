@@ -30,6 +30,7 @@ public:
 
     GWOArgs();
     GWOArgs(int agents, int iterations, string dataSource);
+    string toString() const;
 };
 
 GWOArgs parse_arguments(int argc, char* argv[]);
@@ -37,6 +38,7 @@ void read_data(string filename, vector<vector<double>> &data);
 void standardize(std::vector<std::vector<double>> &input);
 double fitness_func(double input[], int dim, vector<vector<double>>& data);
 void print_data(vector<vector<double>> &data);
+void writeResult(string method, double alphaScore, double time, GWOArgs & args);
 inline double getA(double &a, uniform_real_distribution<> &dis, mt19937 &gen)
 {
     return 2 * a * dis(gen) - a; // Equation (3.3)
