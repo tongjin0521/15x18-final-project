@@ -7,19 +7,16 @@
 
 using namespace std;
 
-const int SearchAgents_no = 5; // Number of search agents
-
-const int Max_iter = 10; // Maximum number of iterations
-
-const int dim = 14; // Width of data matrix
-
 int main(int argc, char *argv[])
 {
     int pid;
     int nproc;
 
     vector<vector<double>> data;
+    const int dim = data[0].size();
     read_data("cleavland-more.csv", data);
+
+    GWOArgs args = parse_arguments(argc, argv);
 
     // Initialize MPI
     MPI_Init(&argc, &argv);
@@ -52,7 +49,7 @@ int main(int argc, char *argv[])
 
     Timer totalSimulationTimer;
     // Main loop
-    for (int l = 0; l < Max_iter; l++)
+    for (int l = 0; l < args.iterNum; l++)
     {
         // define alpha beta and delta wolves
 
@@ -139,7 +136,7 @@ int main(int argc, char *argv[])
             MPI_Recv(Delta_pos, dim, MPI_DOUBLE, 0, 2, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         }
 
-        double a = 2 - l * (2.0 / Max_iter); // a decreases linearly fron 2 to 0
+        double a = 2 - l * (2.0 / args.iterNum); // a decreases linearly fron 2 to 0
 
         // Update the position of this search agent
 

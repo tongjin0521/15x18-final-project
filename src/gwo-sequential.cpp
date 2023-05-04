@@ -116,17 +116,8 @@ int main(int argc, char *argv[])
     // standardize(data);
     // print_data(data);
 
-    int num_agents = DEFAULT_AGENT_NUM; // default value
-    int num_iterations = DEFAULT_ITER_NUM; // default value
+    GWOArgs args = parse_arguments(argc, argv);
 
-    // Parse command-line arguments
-    if (argc > 1) {
-        num_agents = atoi(argv[1]);
-        if (argc > 2) {
-            num_iterations = atoi(argv[2]);
-        }
-    }
-
-    vector<double> res = GWO(fitness_func, data[0].size(), num_agents, num_iterations, data);
+    vector<double> res = GWO(fitness_func, data[0].size(), args.agentNum, args.iterNum, data);
     return 0;
 }

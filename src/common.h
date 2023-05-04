@@ -19,7 +19,18 @@ using namespace std;
 
 const int DEFAULT_AGENT_NUM = 5;
 const int DEFAULT_ITER_NUM = 10;
+const double THRESHOLD = 0.5;
 
+class GWOArgs {
+public:
+    int agentNum;
+    int iterNum;
+
+    GWOArgs();
+    GWOArgs(int agents, int iterations);
+};
+
+GWOArgs parse_arguments(int argc, char* argv[]);
 void read_data(string filename, vector<vector<double>> &data);
 void standardize(std::vector<std::vector<double>> &input);
 double fitness_func(double input[], int dim, vector<vector<double>>& data);
