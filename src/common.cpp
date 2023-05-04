@@ -63,19 +63,17 @@ double fitness_func(double input[], int dim, vector<vector<double>>& data)
 {   
     vector<int> selectedCols;
     for (int i = 0; i < dim; i++){
-        if (input[i] < THRESHOLD){
-            selectedCols.emplace_back(0);
-        }else{
-            selectedCols.emplace_back(1);
+        if (input[i] > THRESHOLD){
+            selectedCols.emplace_back(i);
         }
     }
-    
+
     // Prepare the dataset using only the selected columns
     vector<svm_node*> nodes;
     vector<double> labels;
     for (size_t i = 0; i < data.size(); i++) {
         svm_node *x = new svm_node[selectedCols.size()+1];
-        for (size_t j = 0; j < selectedCols.size(); j++) {
+        for (int j = 0; j < int(selectedCols.size()); j++) {
             x[j].index = j+1;
             x[j].value = data[i][selectedCols[j]];
         }
@@ -93,29 +91,33 @@ double fitness_func(double input[], int dim, vector<vector<double>>& data)
         problem.x[i] = nodes[i];
         problem.y[i] = labels[i];
     }
-
     // Set SVM parameters
     svm_parameter param;
     param.svm_type = C_SVC;
     param.kernel_type = RBF;
     param.gamma = 0.5;
     param.C = 1;
-
+    double weight[] = {1, 1, 1, 1, 1}; // assign higher weight to class 3
+    int weight_label[] = {0, 1, 2, 3, 4};
+    param.nr_weight = 5;
+    param.weight = weight;
+    param.weight_label = weight_label;
     // Train the SVM
     svm_model *model = svm_train(&problem, &param);
-
     // Predict the labels of the training data
-    double *predictions = new double[problem.l];
-    svm_predict_values(model,(const svm_node*) problem.x, predictions);
-
-    // Calculate the accuracy
+   // Predict on the training set
     int correct = 0;
-    for (int i = 0; i < problem.l; i++) {
-        if (predictions[i] == problem.y[i]) {
+    for (int i = 0; i < (int)nodes.size(); i++) {
+        double prediction = svm_predict(model, nodes[i]);
+        if (prediction == labels[i]) {
             correct++;
         }
     }
-    double accuracy = (double) correct / problem.l;
+    double accuracy = (double) correct / nodes.size();
+
+    // Output the accuracy
+    cout << "Accuracy on training set: " << accuracy << endl;
+
     // Free allocated memory
     for (size_t i = 0; i < nodes.size(); i++) {
         delete[] nodes[i];

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, int Max_iter)
+vector<double> GWO(double (*objf)(double[], int,vector<vector<double>>&), int dim, int SearchAgents_no, int Max_iter,vector<vector<double>>& data)
 {
 
     // Initialize alpha, beta, and delta_pos
@@ -48,7 +48,7 @@ vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, 
             }
 
             // Calculate objective function for each search agent
-            double fitness = objf(Positions[i], dim);
+            double fitness = objf(Positions[i], dim, data);
 
             // Update Alpha, Beta, and Delta
             if (fitness < Alpha_score)
@@ -112,6 +112,6 @@ int main()
     // print_data(data);
     // standardize(data);
     // print_data(data);
-    vector<double> res = GWO(fitness_func, data[0].size(), 5, 10);
+    vector<double> res = GWO(fitness_func, data[0].size(), 5, 10, data);
     return 0;
 }

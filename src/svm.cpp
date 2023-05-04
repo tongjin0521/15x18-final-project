@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <limits.h>
 #include <locale.h>
+#include <iostream>
 #include "svm.h"
 #ifdef _OPENMP
 #include <omp.h>
@@ -329,8 +330,9 @@ double Kernel::k_function(const svm_node *x, const svm_node *y,
 		case RBF:
 		{
 			double sum = 0;
+			
 			while(x->index != -1 && y->index !=-1)
-			{
+			{	
 				if(x->index == y->index)
 				{
 					double d = x->value - y->value;
@@ -562,7 +564,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 	// optimization step
 
 	int iter = 0;
-	int max_iter = max(10000000, l>INT_MAX/100 ? INT_MAX : 100*l);
+	int max_iter = max(10000, l>INT_MAX/100 ? INT_MAX : 100*l);
 	int counter = min(l,1000)+1;
 
 	while(iter < max_iter)
@@ -2257,16 +2259,18 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 			x[i] = prob->x[perm[i]];
 
 		// calculate weighted C
-
+		
 		double *weighted_C = Malloc(double, nr_class);
 		for(i=0;i<nr_class;i++)
 			weighted_C[i] = param->C;
 		for(i=0;i<param->nr_weight;i++)
 		{
 			int j;
-			for(j=0;j<nr_class;j++)
-				if(param->weight_label[i] == label[j])
+			for(j=0;j<nr_class;j++){
+				if(param->weight_label[i] == label[j]){
 					break;
+				}
+			}
 			if(j == nr_class)
 				fprintf(stderr,"WARNING: class label %d specified in weight is not found\n", param->weight_label[i]);
 			else
@@ -2608,7 +2612,7 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 		double sum = 0;
 #ifdef _OPENMP
 #pragma omp parallel for private(i) reduction(+:sum) schedule(guided)
-#endif
+#endif	
 		for(i=0;i<model->l;i++)
 			sum += sv_coef[i] * Kernel::k_function(x,model->SV[i],model->param);
 		sum -= model->rho[0];
@@ -2628,20 +2632,20 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 #ifdef _OPENMP
 #pragma omp parallel for private(i) schedule(guided)
 #endif
-		for(i=0;i<l;i++)
+		for(i=0;i<l;i++){
 			kvalue[i] = Kernel::k_function(x,model->SV[i],model->param);
-
+		}
+			
 		int *start = Malloc(int,nr_class);
 		start[0] = 0;
 		for(i=1;i<nr_class;i++)
 			start[i] = start[i-1]+model->nSV[i-1];
-
 		int *vote = Malloc(int,nr_class);
 		for(i=0;i<nr_class;i++)
 			vote[i] = 0;
-
 		int p=0;
 		for(i=0;i<nr_class;i++)
+			
 			for(int j=i+1;j<nr_class;j++)
 			{
 				double sum = 0;
@@ -2666,7 +2670,6 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 					++vote[j];
 				p++;
 			}
-
 		int vote_max_idx = 0;
 		for(i=1;i<nr_class;i++)
 			if(vote[i] > vote[vote_max_idx])
