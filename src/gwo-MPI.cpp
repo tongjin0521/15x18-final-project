@@ -2,6 +2,7 @@
 #include <iostream>
 #include <random>
 #include "common.h"
+#include "timing.h"
 #include "mpi.h"
 
 using namespace std;
@@ -49,8 +50,7 @@ int main(int argc, char *argv[])
         pos[i] = dis(gen);
     }
 
-    // double Convergence_curve[Max_iter];
-
+    Timer totalSimulationTimer;
     // Main loop
     for (int l = 0; l < Max_iter; l++)
     {
@@ -171,6 +171,9 @@ int main(int argc, char *argv[])
 
     if (pid == 0)
     {
+        double totalSimulationTime = totalSimulationTimer.elapsed();
+        // printf("\n%.6f\n", now / options.numIterations);
+        printf("total simulation time: %.6fs\n", totalSimulationTime);
         vector<double> res;
         for (int i = 0; i < dim; i++)
         {
