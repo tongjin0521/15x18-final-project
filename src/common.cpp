@@ -1,7 +1,34 @@
 #include "common.h"
 using namespace std;
 
-const double THRESHOLD = 0.5;
+GWOArgs::GWOArgs()
+{
+    agentNum = 5;
+    iterNum = 10;
+}
+
+GWOArgs::GWOArgs(int agents, int iterations)
+{
+    agentNum = agents;
+    iterNum = iterations;
+}
+
+GWOArgs parse_arguments(int argc, char *argv[])
+{
+    GWOArgs args;
+
+    // Parse command-line arguments
+    if (argc > 1)
+    {
+        args.agentNum = atoi(argv[1]);
+        if (argc > 2)
+        {
+            args.iterNum = atoi(argv[2]);
+        }
+    }
+
+    return args;
+}
 
 void read_data(string filename, vector<vector<double>> &data)
 {
@@ -59,8 +86,8 @@ void print_data(vector<vector<double>> &data)
     }
 }
 
-double fitness_func(double input[], int dim, vector<vector<double>>& data)
-{   
+double fitness_func(double input[], int dim, vector<vector<double>> &data)
+{
     vector<int> selectedCols;
     for (int i = 0; i < dim; i++){
         if (input[i] > THRESHOLD){
@@ -69,7 +96,7 @@ double fitness_func(double input[], int dim, vector<vector<double>>& data)
     }
 
     // Prepare the dataset using only the selected columns
-    vector<svm_node*> nodes;
+    vector<svm_node *> nodes;
     vector<double> labels;
     for (size_t i = 0; i < data.size(); i++) {
         svm_node *x = new svm_node[selectedCols.size()+1];
@@ -79,15 +106,16 @@ double fitness_func(double input[], int dim, vector<vector<double>>& data)
         }
         x[selectedCols.size()].index = -1;
         nodes.push_back(x);
-        labels.push_back(data[i][data[i].size()-1]); // last column is the label
+        labels.push_back(data[i][data[i].size() - 1]); // last column is the label
     }
 
     // Prepare the SVM problem
     svm_problem problem;
     problem.l = nodes.size();
-    problem.x = new svm_node*[problem.l];
+    problem.x = new svm_node *[problem.l];
     problem.y = new double[problem.l];
-    for (size_t i = 0; i < nodes.size(); i++) {
+    for (size_t i = 0; i < nodes.size(); i++)
+    {
         problem.x[i] = nodes[i];
         problem.y[i] = labels[i];
     }
@@ -119,7 +147,8 @@ double fitness_func(double input[], int dim, vector<vector<double>>& data)
     cout << "Accuracy on training set: " << accuracy << endl;
 
     // Free allocated memory
-    for (size_t i = 0; i < nodes.size(); i++) {
+    for (size_t i = 0; i < nodes.size(); i++)
+    {
         delete[] nodes[i];
     }
     delete[] problem.x;

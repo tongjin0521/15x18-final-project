@@ -2,20 +2,21 @@
 #include <iostream>
 #include <random>
 #include "common.h"
+#include "timing.h"
 #include "mpi.h"
 
 using namespace std;
-
-const int SearchAgents_no = 5; // Number of search agents
-
-const int Max_iter = 10; // Maximum number of iterations
-
-const int dim = 14; // Width of data matrix
 
 int main(int argc, char *argv[])
 {
     int pid;
     int nproc;
+
+    vector<vector<double>> data;
+    const int dim = data[0].size();
+    read_data("cleavland-more.csv", data);
+
+    GWOArgs args = parse_arguments(argc, argv);
 
     // Initialize MPI
     MPI_Init(&argc, &argv);
@@ -46,10 +47,9 @@ int main(int argc, char *argv[])
         pos[i] = dis(gen);
     }
 
-    // double Convergence_curve[Max_iter];
-
+    Timer totalSimulationTimer;
     // Main loop
-    for (int l = 0; l < Max_iter; l++)
+    for (int l = 0; l < args.iterNum; l++)
     {
         // define alpha beta and delta wolves
 
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
         }
 
         // Calculate objective function for each search agent
-        double fitness = fitness_func(pos, dim);
+        double fitness = fitness_func(pos, dim, data);
 
         // for master
         double fitnesses[nproc];
@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
             MPI_Recv(Delta_pos, dim, MPI_DOUBLE, 0, 2, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         }
 
-        double a = 2 - l * (2.0 / Max_iter); // a decreases linearly fron 2 to 0
+        double a = 2 - l * (2.0 / args.iterNum); // a decreases linearly fron 2 to 0
 
         // Update the position of this search agent
 
@@ -168,6 +168,9 @@ int main(int argc, char *argv[])
 
     if (pid == 0)
     {
+        double totalSimulationTime = totalSimulationTimer.elapsed();
+        // printf("\n%.6f\n", now / options.numIterations);
+        printf("total simulation time: %.6fs\n", totalSimulationTime);
         vector<double> res;
         for (int i = 0; i < dim; i++)
         {
