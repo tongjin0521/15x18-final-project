@@ -89,13 +89,13 @@ vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int 
 
             Positions[i][j] = (X1 + X2 + X3) / 3; // Equation (3.7)
         }
-        cout << "--------" << endl;
-        cout << l << " " << Alpha_score << endl;
-        for (int j = 0; j < dim; j++)
-        {
-            cout << Alpha_pos[j] << " ";
-        }
-        cout << endl;
+        // cout << "--------" << endl;
+        // cout << l << " " << Alpha_score << endl;
+        // for (int j = 0; j < dim; j++)
+        // {
+        //     cout << Alpha_pos[j] << " ";
+        // }
+        // cout << endl;
     }
     vector<double> res;
     for (int i = 0; i < dim; i++)

@@ -144,7 +144,7 @@ double fitness_func(double input[], int dim, vector<vector<double>> &data)
     double accuracy = (double) correct / nodes.size();
 
     // Output the accuracy
-    cout << "Accuracy on training set: " << accuracy << endl;
+    // cout << "Accuracy on training set: " << accuracy << endl;
 
     // Free allocated memory
     for (size_t i = 0; i < nodes.size(); i++)
