@@ -112,7 +112,7 @@ vector<double> GWO(double (*objf)(double[], int,vector<vector<double>>&), int di
 int main(int argc, char *argv[])
 {
     vector<vector<double>> data;
-    read_data("test.csv", data);
+    read_data("cleavland.csv", data);
     // print_data(data);
     // standardize(data);
     // print_data(data);

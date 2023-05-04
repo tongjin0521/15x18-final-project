@@ -564,7 +564,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 	// optimization step
 
 	int iter = 0;
-	int max_iter = max(1000000, l>INT_MAX/100 ? INT_MAX : 100*l);
+	int max_iter = max(1000, l>INT_MAX/100 ? INT_MAX : 100*l);
 	int counter = min(l,1000)+1;
 
 	while(iter < max_iter)
@@ -2267,6 +2267,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 		{
 			int j;
 			for(j=0;j<nr_class;j++){
+				// std::cout<<param->weight_label[i] <<" + "<<label[j] << " "<< i << " "<< j<<std::endl;
 				if(param->weight_label[i] == label[j]){
 					break;
 				}
