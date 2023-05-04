@@ -17,6 +17,9 @@ int main(int argc, char *argv[])
     int pid;
     int nproc;
 
+    vector<vector<double>> data;
+    read_data("cleavland-more.csv", data);
+
     // Initialize MPI
     MPI_Init(&argc, &argv);
     // Get process rank
@@ -60,7 +63,7 @@ int main(int argc, char *argv[])
         }
 
         // Calculate objective function for each search agent
-        double fitness = fitness_func(pos, dim);
+        double fitness = fitness_func(pos, dim, data);
 
         // for master
         double fitnesses[nproc];
