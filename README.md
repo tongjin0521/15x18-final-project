@@ -11,4 +11,9 @@ mpirun -n 5 gwo-MPI
 
 Run the OpenMP version with `./gwo-OpenMP`.
 
-All versions may have up to two command-line arguments: the first one is the number of agents (defaults to 5) and the second one is the number of iterations (defaults to 10). If only one argument is given, it is interpreted as the number of agents. 
+All versions may have up to three command-line arguments: 
+1. the number of agents (defaults to 5).
+2. the number of iterations (defaults to 10). 
+3. the data source as a string (defaults to "cleavland.csv").
+
+If fewer arguments are provided, they will be filled in from the right. For example, if only the number of agents is provided, the number of iterations will be 10 and the data source will be "cleavland.csv".
