@@ -2,11 +2,14 @@
 #include <iostream>
 #include <random>
 #include "common.h"
+#include "timing.h"
 
 using namespace std;
 
-vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int dim, int SearchAgents_no, int Max_iter, vector<vector<double>> &data)
+vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int dim, GWOArgs &args, vector<vector<double>> &data)
 {
+    int SearchAgents_no = args.agentNum;
+    int Max_iter = args.iterNum;
 
     // Initialize alpha, beta, and delta_pos
     double Alpha_pos[dim];
@@ -33,6 +36,7 @@ vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int 
 
     // double Convergence_curve[Max_iter];
 
+    Timer totalSimulationTimer;
     // Main loop
     for (int l = 0; l < Max_iter; l++)
     {
@@ -89,14 +93,18 @@ vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int 
 
             Positions[i][j] = (X1 + X2 + X3) / 3; // Equation (3.7)
         }
-        cout << "--------" << endl;
-        cout << l << " " << Alpha_score << endl;
-        for (int j = 0; j < dim; j++)
-        {
-            cout << Alpha_pos[j] << " ";
-        }
-        cout << endl;
+        // cout << "--------" << endl;
+        // cout << l << " " << Alpha_score << endl;
+        // for (int j = 0; j < dim; j++)
+        // {
+        //     cout << Alpha_pos[j] << " ";
+        // }
+        // cout << endl;
     }
+    // cout << "OpenMP alpha score: " << Alpha_score << endl;
+    double totalSimulationTime = totalSimulationTimer.elapsed();
+    // printf("OpenMP total simulation time: %.6fs\n", totalSimulationTime);
+    writeResult("OpenMP", Alpha_score, totalSimulationTime, args);
     vector<double> res;
     for (int i = 0; i < dim; i++)
     {
@@ -107,12 +115,12 @@ vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int 
 
 int main(int argc, char *argv[])
 {
+    GWOArgs args = parse_arguments(argc, argv);
     vector<vector<double>> data;
-    read_data("test.csv", data);
+    read_data(args.dataSource, data);
     // print_data(data);
     // standardize(data);
     // print_data(data);
-    GWOArgs args = parse_arguments(argc, argv);
-    vector<double> res = GWO(fitness_func, data[0].size(), args.agentNum, args.iterNum, data);
+    vector<double> res = GWO(fitness_func, data[0].size(), args, data);
     return 0;
 }

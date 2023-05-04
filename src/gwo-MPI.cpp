@@ -12,11 +12,11 @@ int main(int argc, char *argv[])
     int pid;
     int nproc;
 
-    vector<vector<double>> data;
-    const int dim = data[0].size();
-    read_data("cleavland-more.csv", data);
-
     GWOArgs args = parse_arguments(argc, argv);
+
+    vector<vector<double>> data;
+    read_data(args.dataSource, data);
+    const int dim = data[0].size();
 
     // Initialize MPI
     MPI_Init(&argc, &argv);
@@ -154,23 +154,25 @@ int main(int argc, char *argv[])
             pos[j] = (X1 + X2 + X3) / 3; // Equation (3.7)
         }
 
-        if (pid == 0)
-        {
-            cout << "--------" << endl;
-            cout << l << " " << Alpha_score << endl;
-            for (int j = 0; j < dim; j++)
-            {
-                cout << Alpha_pos[j] << " ";
-            }
-            cout << endl;
-        }
+        // if (pid == 0)
+        // {
+        //     cout << "--------" << endl;
+        //     cout << l << " " << Alpha_score << endl;
+        //     for (int j = 0; j < dim; j++)
+        //     {
+        //         cout << Alpha_pos[j] << " ";
+        //     }
+        //     cout << endl;
+        // }
     }
 
     if (pid == 0)
     {
+        // cout << "MPI alpha score: " << Alpha_score << endl;
         double totalSimulationTime = totalSimulationTimer.elapsed();
         // printf("\n%.6f\n", now / options.numIterations);
-        printf("total simulation time: %.6fs\n", totalSimulationTime);
+        // printf("MPI total simulation time: %.6fs\n", totalSimulationTime);
+        writeResult("MPI", Alpha_score, totalSimulationTime, args);
         vector<double> res;
         for (int i = 0; i < dim; i++)
         {

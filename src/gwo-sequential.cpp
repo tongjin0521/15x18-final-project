@@ -6,8 +6,10 @@
 
 using namespace std;
 
-vector<double> GWO(double (*objf)(double[], int,vector<vector<double>>&), int dim, int SearchAgents_no, int Max_iter,vector<vector<double>>& data)
+vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int dim, GWOArgs &args, vector<vector<double>> &data)
 {
+    int SearchAgents_no = args.agentNum;
+    int Max_iter = args.iterNum;
 
     // Initialize alpha, beta, and delta_pos
     double Alpha_pos[dim];
@@ -47,7 +49,8 @@ vector<double> GWO(double (*objf)(double[], int,vector<vector<double>>&), int di
             }
 
             // Calculate objective function for each search agent
-            double fitness = objf(Positions[i], dim,data);
+
+            double fitness = objf(Positions[i], dim, data);
 
             // Update Alpha, Beta, and Delta
             if (fitness < Alpha_score)
@@ -88,17 +91,20 @@ vector<double> GWO(double (*objf)(double[], int,vector<vector<double>>&), int di
                 Positions[i][j] = (X1 + X2 + X3) / 3; // Equation (3.7)
             }
         }
-        cout << "--------" << endl;
-        cout << l << " " << Alpha_score << endl;
-        for (int j = 0; j < dim; j++)
-        {
-            cout << Alpha_pos[j] << " ";
-        }
-        cout << endl;
+        // cout << "--------" << endl;
+        // cout << l << " " << Alpha_score << endl;
+        // for (int j = 0; j < dim; j++)
+        // {
+        //     cout << Alpha_pos[j] << " ";
+        // }
+        // cout << endl;
     }
-    
+
+    // cout << "Sequential alpha score: " << Alpha_score << endl;
     double totalSimulationTime = totalSimulationTimer.elapsed();
-    printf("total simulation time: %.6fs\n", totalSimulationTime);
+    // printf("Sequential total simulation time: %.6fs\n", totalSimulationTime);
+
+    writeResult("Sequential", Alpha_score, totalSimulationTime, args);
 
     vector<double> res;
     for (int i = 0; i < dim; i++)
@@ -110,14 +116,13 @@ vector<double> GWO(double (*objf)(double[], int,vector<vector<double>>&), int di
 
 int main(int argc, char *argv[])
 {
+    GWOArgs args = parse_arguments(argc, argv);
     vector<vector<double>> data;
-    read_data("cleavland-more.csv", data);
+    read_data(args.dataSource, data);
     // print_data(data);
     // standardize(data);
     // print_data(data);
 
-    GWOArgs args = parse_arguments(argc, argv);
-
-    vector<double> res = GWO(fitness_func, data[0].size(), args.agentNum, args.iterNum, data);
+    vector<double> res = GWO(fitness_func, data[0].size() - 1, args, data);
     return 0;
 }

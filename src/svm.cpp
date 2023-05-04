@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <limits.h>
 #include <locale.h>
+#include <iostream>
 #include "svm.h"
 #ifdef _OPENMP
 #include <omp.h>
@@ -329,8 +330,9 @@ double Kernel::k_function(const svm_node *x, const svm_node *y,
 		case RBF:
 		{
 			double sum = 0;
+			
 			while(x->index != -1 && y->index !=-1)
-			{
+			{	
 				if(x->index == y->index)
 				{
 					double d = x->value - y->value;
@@ -479,8 +481,8 @@ void Solver::reconstruct_gradient()
 		if(is_free(j))
 			nr_free++;
 
-	if(2*nr_free < active_size)
-		info("\nWARNING: using -h 0 may be faster\n");
+	// if(2*nr_free < active_size)
+	// 	info("\nWARNING: using -h 0 may be faster\n");
 
 	if (nr_free*l > 2*active_size*(l-active_size))
 	{
@@ -562,7 +564,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 	// optimization step
 
 	int iter = 0;
-	int max_iter = max(10000000, l>INT_MAX/100 ? INT_MAX : 100*l);
+	int max_iter = max(5000, l>INT_MAX/100 ? INT_MAX : 100*l);
 	int counter = min(l,1000)+1;
 
 	while(iter < max_iter)
@@ -573,7 +575,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		{
 			counter = min(l,1000);
 			if(shrinking) do_shrinking();
-			info(".");
+			// info(".");
 		}
 
 		int i,j;
@@ -583,7 +585,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			reconstruct_gradient();
 			// reset active set size and check
 			active_size = l;
-			info("*");
+			// info("*");
 			if(select_working_set(i,j)!=0)
 				break;
 			else
@@ -739,9 +741,9 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			// reconstruct the whole gradient to calculate objective value
 			reconstruct_gradient();
 			active_size = l;
-			info("*");
+			// info("*");
 		}
-		fprintf(stderr,"\nWARNING: reaching max number of iterations\n");
+		// fprintf(stderr,"\nWARNING: reaching max number of iterations\n");
 	}
 
 	// calculate rho
@@ -775,7 +777,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 	si->upper_bound_p = Cp;
 	si->upper_bound_n = Cn;
 
-	info("\noptimization finished, #iter = %d\n",iter);
+	// info("\noptimization finished, #iter = %d\n",iter);
 
 	delete[] p;
 	delete[] y;
@@ -948,7 +950,7 @@ void Solver::do_shrinking()
 		unshrink = true;
 		reconstruct_gradient();
 		active_size = l;
-		info("*");
+		// info("*");
 	}
 
 	for(i=0;i<active_size;i++)
@@ -1472,8 +1474,8 @@ static void solve_c_svc(
 	for(i=0;i<l;i++)
 		sum_alpha += alpha[i];
 
-	if (Cp==Cn)
-		info("nu = %f\n", sum_alpha/(Cp*prob->l));
+	// if (Cp==Cn)
+	// 	info("nu = %f\n", sum_alpha/(Cp*prob->l));
 
 	for(i=0;i<l;i++)
 		alpha[i] *= y[i];
@@ -1679,7 +1681,7 @@ static decision_function svm_train_one(
 			break;
 	}
 
-	info("obj = %f, rho = %f\n",si.obj,si.rho);
+	// info("obj = %f, rho = %f\n",si.obj,si.rho);
 
 	// output SVs
 
@@ -1703,7 +1705,7 @@ static decision_function svm_train_one(
 		}
 	}
 
-	info("nSV = %d, nBSV = %d\n",nSV,nBSV);
+	// info("nSV = %d, nBSV = %d\n",nSV,nBSV);
 
 	decision_function f;
 	f.alpha = alpha;
@@ -2257,19 +2259,20 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 			x[i] = prob->x[perm[i]];
 
 		// calculate weighted C
-
+		
 		double *weighted_C = Malloc(double, nr_class);
 		for(i=0;i<nr_class;i++)
 			weighted_C[i] = param->C;
 		for(i=0;i<param->nr_weight;i++)
 		{
 			int j;
-			for(j=0;j<nr_class;j++)
-				if(param->weight_label[i] == label[j])
+			for(j=0;j<nr_class;j++){
+				// std::cout<<param->weight_label[i] <<" + "<<label[j] << " "<< i << " "<< j<<std::endl;
+				if(param->weight_label[i] == label[j]){
 					break;
-			if(j == nr_class)
-				fprintf(stderr,"WARNING: class label %d specified in weight is not found\n", param->weight_label[i]);
-			else
+				}
+			}
+			if(j != nr_class)
 				weighted_C[j] *= param->weight[i];
 		}
 
@@ -2369,7 +2372,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 			nz_count[i] = nSV;
 		}
 
-		info("Total nSV = %d\n",total_sv);
+		// info("Total nSV = %d\n",total_sv);
 
 		model->l = total_sv;
 		model->SV = Malloc(svm_node *,total_sv);
@@ -2608,7 +2611,7 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 		double sum = 0;
 #ifdef _OPENMP
 #pragma omp parallel for private(i) reduction(+:sum) schedule(guided)
-#endif
+#endif	
 		for(i=0;i<model->l;i++)
 			sum += sv_coef[i] * Kernel::k_function(x,model->SV[i],model->param);
 		sum -= model->rho[0];
@@ -2628,20 +2631,20 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 #ifdef _OPENMP
 #pragma omp parallel for private(i) schedule(guided)
 #endif
-		for(i=0;i<l;i++)
+		for(i=0;i<l;i++){
 			kvalue[i] = Kernel::k_function(x,model->SV[i],model->param);
-
+		}
+			
 		int *start = Malloc(int,nr_class);
 		start[0] = 0;
 		for(i=1;i<nr_class;i++)
 			start[i] = start[i-1]+model->nSV[i-1];
-
 		int *vote = Malloc(int,nr_class);
 		for(i=0;i<nr_class;i++)
 			vote[i] = 0;
-
 		int p=0;
 		for(i=0;i<nr_class;i++)
+			
 			for(int j=i+1;j<nr_class;j++)
 			{
 				double sum = 0;
@@ -2666,7 +2669,6 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 					++vote[j];
 				p++;
 			}
-
 		int vote_max_idx = 0;
 		for(i=1;i<nr_class;i++)
 			if(vote[i] > vote[vote_max_idx])
