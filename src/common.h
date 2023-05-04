@@ -1,21 +1,26 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <vector>
-#include <string>
 #include <iostream>
+#include <vector>
 #include <fstream>
+#include <string>
 #include <sstream>
-#include <numeric>
+#include <cstring>
 #include <cmath>
+#include <cstdlib>
 #include <algorithm>
+#include "svm.h" //libsvm header file
+
+#include <numeric>
 #include <random>
+
 
 using namespace std;
 
 void read_data(string filename, vector<vector<double>> &data);
 void standardize(std::vector<std::vector<double>> &input);
-double fitness_func(double input[], int dim);
+double fitness_func(double input[], int dim, vector<vector<double>>& data);
 void print_data(vector<vector<double>> &data);
 inline double getA(double &a, uniform_real_distribution<> &dis, mt19937 &gen)
 {
