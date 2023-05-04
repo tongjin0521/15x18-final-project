@@ -28,7 +28,7 @@ GWOArgs parse_arguments(int argc, char *argv[])
             args.iterNum = atoi(argv[2]);
             if (argc > 3)
             {
-                args.dataSource = string(argv[2]);
+                args.dataSource = string(argv[3]);
             }
         }
     }
