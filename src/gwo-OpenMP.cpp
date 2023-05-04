@@ -5,11 +5,7 @@
 
 using namespace std;
 
-<<<<<<< HEAD
-vector<double> GWO(double (*objf)(double[], int,vector<vector<double>>&), int dim, int SearchAgents_no, int Max_iter,vector<vector<double>>& data)
-=======
 vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int dim, int SearchAgents_no, int Max_iter, vector<vector<double>> &data)
->>>>>>> 4ef3accec7167d13916fb6129d234d6b413486ae
 {
 
     // Initialize alpha, beta, and delta_pos
