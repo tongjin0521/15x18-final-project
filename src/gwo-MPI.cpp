@@ -154,16 +154,16 @@ int main(int argc, char *argv[])
             pos[j] = (X1 + X2 + X3) / 3; // Equation (3.7)
         }
 
-        if (pid == 0)
-        {
-            cout << "--------" << endl;
-            cout << l << " " << Alpha_score << endl;
-            for (int j = 0; j < dim; j++)
-            {
-                cout << Alpha_pos[j] << " ";
-            }
-            cout << endl;
-        }
+        // if (pid == 0)
+        // {
+        //     cout << "--------" << endl;
+        //     cout << l << " " << Alpha_score << endl;
+        //     for (int j = 0; j < dim; j++)
+        //     {
+        //         cout << Alpha_pos[j] << " ";
+        //     }
+        //     cout << endl;
+        // }
     }
 
     if (pid == 0)

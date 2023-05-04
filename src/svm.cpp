@@ -481,8 +481,8 @@ void Solver::reconstruct_gradient()
 		if(is_free(j))
 			nr_free++;
 
-	if(2*nr_free < active_size)
-		info("\nWARNING: using -h 0 may be faster\n");
+	// if(2*nr_free < active_size)
+	// 	info("\nWARNING: using -h 0 may be faster\n");
 
 	if (nr_free*l > 2*active_size*(l-active_size))
 	{
@@ -564,7 +564,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 	// optimization step
 
 	int iter = 0;
-	int max_iter = max(1000, l>INT_MAX/100 ? INT_MAX : 100*l);
+	int max_iter = max(5000, l>INT_MAX/100 ? INT_MAX : 100*l);
 	int counter = min(l,1000)+1;
 
 	while(iter < max_iter)
@@ -575,7 +575,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		{
 			counter = min(l,1000);
 			if(shrinking) do_shrinking();
-			info(".");
+			// info(".");
 		}
 
 		int i,j;
@@ -585,7 +585,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			reconstruct_gradient();
 			// reset active set size and check
 			active_size = l;
-			info("*");
+			// info("*");
 			if(select_working_set(i,j)!=0)
 				break;
 			else
@@ -741,9 +741,9 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			// reconstruct the whole gradient to calculate objective value
 			reconstruct_gradient();
 			active_size = l;
-			info("*");
+			// info("*");
 		}
-		fprintf(stderr,"\nWARNING: reaching max number of iterations\n");
+		// fprintf(stderr,"\nWARNING: reaching max number of iterations\n");
 	}
 
 	// calculate rho
@@ -950,7 +950,7 @@ void Solver::do_shrinking()
 		unshrink = true;
 		reconstruct_gradient();
 		active_size = l;
-		info("*");
+		// info("*");
 	}
 
 	for(i=0;i<active_size;i++)
@@ -2272,9 +2272,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 					break;
 				}
 			}
-			if(j == nr_class)
-				fprintf(stderr,"WARNING: class label %d specified in weight is not found\n", param->weight_label[i]);
-			else
+			if(j != nr_class)
 				weighted_C[j] *= param->weight[i];
 		}
 
