@@ -5,7 +5,7 @@
 
 using namespace std;
 
-vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, int Max_iter)
+vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int dim, int SearchAgents_no, int Max_iter, vector<vector<double>> &data)
 {
 
     // Initialize alpha, beta, and delta_pos
@@ -36,9 +36,9 @@ vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, 
     // Main loop
     for (int l = 0; l < Max_iter; l++)
     {
-        // define alpha beta and delta wolves
-        // TODO: can we have more wolves? so best 4 solutions instead
-        #pragma omp parallel for schedule(auto)
+// define alpha beta and delta wolves
+// TODO: can we have more wolves? so best 4 solutions instead
+#pragma omp parallel for schedule(auto)
         for (int i = 0; i < SearchAgents_no; i++)
         {
             // Return back the search agents that go beyond the boundaries of the search space
@@ -48,7 +48,7 @@ vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, 
             }
 
             // Calculate objective function for each search agent
-            double fitness = objf(Positions[i], dim);
+            double fitness = objf(Positions[i], dim, data);
 
             // Update Alpha, Beta, and Delta
             if (fitness < Alpha_score)
@@ -72,8 +72,8 @@ vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, 
 
         double a = 2 - l * (2.0 / Max_iter); // a decreases linearly fron 2 to 0
 
-        // Update the position of search agents including omegas
-        #pragma omp parallel for schedule(auto)
+// Update the position of search agents including omegas
+#pragma omp parallel for schedule(auto)
         for (int ind = 0; ind < SearchAgents_no * dim; ind++)
         {
             int i = ind / dim;
@@ -105,13 +105,14 @@ vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, 
     return res;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     vector<vector<double>> data;
     read_data("test.csv", data);
     // print_data(data);
     // standardize(data);
     // print_data(data);
-    vector<double> res = GWO(fitness_func, data[0].size(), 5, 10);
+    GWOArgs args = parse_arguments(argc, argv);
+    vector<double> res = GWO(fitness_func, data[0].size(), args.agentNum, args.iterNum, data);
     return 0;
 }
