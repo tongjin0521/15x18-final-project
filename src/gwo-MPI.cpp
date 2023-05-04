@@ -12,10 +12,11 @@ int main(int argc, char *argv[])
     int pid;
     int nproc;
 
-    vector<vector<double>> data;
-    read_data("cleavland-more.csv", data);
-    const int dim = data[0].size();
     GWOArgs args = parse_arguments(argc, argv);
+
+    vector<vector<double>> data;
+    read_data(args.dataSource, data);
+    const int dim = data[0].size();
 
     // Initialize MPI
     MPI_Init(&argc, &argv);

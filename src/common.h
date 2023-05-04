@@ -19,15 +19,17 @@ using namespace std;
 
 const int DEFAULT_AGENT_NUM = 5;
 const int DEFAULT_ITER_NUM = 10;
+const string DEFAULT_DATA = "test.csv";
 const double THRESHOLD = 0.5;
 
 class GWOArgs {
 public:
     int agentNum;
     int iterNum;
+    string dataSource;
 
     GWOArgs();
-    GWOArgs(int agents, int iterations);
+    GWOArgs(int agents, int iterations, string dataSource);
 };
 
 GWOArgs parse_arguments(int argc, char* argv[]);
