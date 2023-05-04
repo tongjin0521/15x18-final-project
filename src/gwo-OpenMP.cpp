@@ -4,6 +4,8 @@
 #include "common.h"
 #include "timing.h"
 
+#define method auto
+
 using namespace std;
 
 vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int dim, GWOArgs &args, vector<vector<double>> &data)
@@ -42,7 +44,7 @@ vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int 
     {
 // define alpha beta and delta wolves
 // TODO: can we have more wolves? so best 4 solutions instead
-#pragma omp parallel for schedule(auto)
+#pragma omp parallel for schedule(method)
         for (int i = 0; i < SearchAgents_no; i++)
         {
             // Return back the search agents that go beyond the boundaries of the search space
@@ -79,7 +81,7 @@ vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int 
         double a = 2 - l * (2.0 / Max_iter); // a decreases linearly fron 2 to 0
 
 // Update the position of search agents including omegas
-#pragma omp parallel for schedule(auto)
+#pragma omp parallel for schedule(method)
         for (int ind = 0; ind < SearchAgents_no * dim; ind++)
         {
             int i = ind / dim;
