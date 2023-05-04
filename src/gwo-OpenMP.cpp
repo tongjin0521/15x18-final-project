@@ -53,7 +53,8 @@ vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int 
 
             // Calculate objective function for each search agent
             double fitness = objf(Positions[i], dim, data);
-
+            #pragma omp critical
+                {
             // Update Alpha, Beta, and Delta
             if (fitness < Alpha_score)
             {
@@ -72,6 +73,7 @@ vector<double> GWO(double (*objf)(double[], int, vector<vector<double>> &), int 
                 Delta_score = fitness; // Update delta
                 copy(Positions[i], Positions[i] + dim, Delta_pos);
             }
+                }
         }
 
         double a = 2 - l * (2.0 / Max_iter); // a decreases linearly fron 2 to 0
