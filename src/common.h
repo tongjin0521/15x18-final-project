@@ -15,8 +15,10 @@
 #include <numeric>
 #include <random>
 
-
 using namespace std;
+
+const int DEFAULT_AGENT_NUM = 5;
+const int DEFAULT_ITER_NUM = 10;
 
 void read_data(string filename, vector<vector<double>> &data);
 void standardize(std::vector<std::vector<double>> &input);

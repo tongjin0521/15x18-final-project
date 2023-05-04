@@ -108,13 +108,25 @@ vector<double> GWO(double (*objf)(double[], int,vector<vector<double>>&), int di
     return res;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     vector<vector<double>> data;
     read_data("cleavland-more.csv", data);
     // print_data(data);
     // standardize(data);
     // print_data(data);
-    vector<double> res = GWO(fitness_func, data[0].size(), 5, 10,data);
+
+    int num_agents = DEFAULT_AGENT_NUM; // default value
+    int num_iterations = DEFAULT_ITER_NUM; // default value
+
+    // Parse command-line arguments
+    if (argc > 1) {
+        num_agents = atoi(argv[1]);
+        if (argc > 2) {
+            num_iterations = atoi(argv[2]);
+        }
+    }
+
+    vector<double> res = GWO(fitness_func, data[0].size(), num_agents, num_iterations, data);
     return 0;
 }
