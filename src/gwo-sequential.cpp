@@ -2,6 +2,7 @@
 #include <iostream>
 #include <random>
 #include "common.h"
+#include "timing.h"
 
 using namespace std;
 
@@ -31,8 +32,7 @@ vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, 
         }
     }
 
-    // double Convergence_curve[Max_iter];
-
+    Timer totalSimulationTimer;
     // Main loop
     for (int l = 0; l < Max_iter; l++)
     {
@@ -96,6 +96,10 @@ vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, 
         }
         cout << endl;
     }
+    
+    double totalSimulationTime = totalSimulationTimer.elapsed();
+    printf("total simulation time: %.6fs\n", totalSimulationTime);
+
     vector<double> res;
     for (int i = 0; i < dim; i++)
     {
@@ -107,7 +111,7 @@ vector<double> GWO(double (*objf)(double[], int), int dim, int SearchAgents_no, 
 int main()
 {
     vector<vector<double>> data;
-    read_data("test.csv", data);
+    read_data("cleavland-more.csv", data);
     // print_data(data);
     // standardize(data);
     // print_data(data);
