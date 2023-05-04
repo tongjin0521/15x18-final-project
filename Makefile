@@ -36,7 +36,7 @@ SEQUENTIAL_EXECUTABLE=gwo-sequential
 MPI_EXECUTABLE=gwo-MPI
 OPENMP_EXECUTABLE=gwo-OpenMP
 
-all: sequential openmp
+all: sequential mpi openmp
 
 # Compile and link the sequential version
 sequential: $(SEQUENTIAL_EXECUTABLE)
