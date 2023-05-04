@@ -1,10 +1,10 @@
 # 15x18-final-project
 
-Compile with `make`.
+Compile with `make`. If on psc, remember to run `module load openmpi/4.0.2-gcc8.3.1` first.
 
 Run the sequential version with `./gwo-sequential`.
 
-Run the MPI version with 
+Run the MPI version with the following command (remember to run `interact -p RM` if on psc):
 ``` bash
 mpirun -n 5 gwo-MPI 
 ```
