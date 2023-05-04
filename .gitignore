@@ -3,5 +3,6 @@
 *.o
 gwo-sequential
 gwo-MPI
+gwo-OpenMP
 
 __pycache__
