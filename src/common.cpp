@@ -3,14 +3,16 @@ using namespace std;
 
 GWOArgs::GWOArgs()
 {
-    agentNum = 5;
-    iterNum = 10;
+    agentNum = DEFAULT_AGENT_NUM;
+    iterNum = DEFAULT_ITER_NUM;
+    dataSource = DEFAULT_DATA;
 }
 
-GWOArgs::GWOArgs(int agents, int iterations)
+GWOArgs::GWOArgs(int agents, int iterations, string dataSource)
 {
     agentNum = agents;
     iterNum = iterations;
+    dataSource = dataSource;
 }
 
 GWOArgs parse_arguments(int argc, char *argv[])
@@ -24,6 +26,10 @@ GWOArgs parse_arguments(int argc, char *argv[])
         if (argc > 2)
         {
             args.iterNum = atoi(argv[2]);
+            if (argc > 3)
+            {
+                args.dataSource = string(argv[2]);
+            }
         }
     }
 
@@ -89,8 +95,10 @@ void print_data(vector<vector<double>> &data)
 double fitness_func(double input[], int dim, vector<vector<double>> &data)
 {
     vector<int> selectedCols;
-    for (int i = 0; i < dim; i++){
-        if (input[i] > THRESHOLD){
+    for (int i = 0; i < dim; i++)
+    {
+        if (input[i] > THRESHOLD)
+        {
             selectedCols.emplace_back(i);
         }
     }
@@ -98,10 +106,12 @@ double fitness_func(double input[], int dim, vector<vector<double>> &data)
     // Prepare the dataset using only the selected columns
     vector<svm_node *> nodes;
     vector<double> labels;
-    for (size_t i = 0; i < data.size(); i++) {
-        svm_node *x = new svm_node[selectedCols.size()+1];
-        for (int j = 0; j < int(selectedCols.size()); j++) {
-            x[j].index = j+1;
+    for (size_t i = 0; i < data.size(); i++)
+    {
+        svm_node *x = new svm_node[selectedCols.size() + 1];
+        for (int j = 0; j < int(selectedCols.size()); j++)
+        {
+            x[j].index = j + 1;
             x[j].value = data[i][selectedCols[j]];
         }
         x[selectedCols.size()].index = -1;
@@ -133,15 +143,17 @@ double fitness_func(double input[], int dim, vector<vector<double>> &data)
     // Train the SVM
     svm_model *model = svm_train(&problem, &param);
     // Predict the labels of the training data
-   // Predict on the training set
+    // Predict on the training set
     int correct = 0;
-    for (int i = 0; i < (int)nodes.size(); i++) {
+    for (int i = 0; i < (int)nodes.size(); i++)
+    {
         double prediction = svm_predict(model, nodes[i]);
-        if (prediction == labels[i]) {
+        if (prediction == labels[i])
+        {
             correct++;
         }
     }
-    double accuracy = (double) correct / nodes.size();
+    double accuracy = (double)correct / nodes.size();
 
     // Output the accuracy
     // cout << "Accuracy on training set: " << accuracy << endl;

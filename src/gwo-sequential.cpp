@@ -111,13 +111,13 @@ vector<double> GWO(double (*objf)(double[], int,vector<vector<double>>&), int di
 
 int main(int argc, char *argv[])
 {
+    GWOArgs args = parse_arguments(argc, argv);
     vector<vector<double>> data;
-    read_data("test.csv", data);
+    read_data(args.dataSource, data);
     // print_data(data);
     // standardize(data);
     // print_data(data);
 
-    GWOArgs args = parse_arguments(argc, argv);
 
     vector<double> res = GWO(fitness_func, data[0].size()-1, args.agentNum, args.iterNum, data);
     return 0;
