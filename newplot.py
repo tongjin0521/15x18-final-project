@@ -91,7 +91,6 @@ for source in csvs:
         yerr = [pair[2] for pair in sorted_pairs]
 
         plt.errorbar(x, y, yerr=yerr, label=method, marker="o", capsize=3)
-    plt.xscale("log")
     plt.xlabel("Data Size")
     plt.ylabel("TIME")
     plt.title("AGENTNUM=5 and ITERNUM=10")
